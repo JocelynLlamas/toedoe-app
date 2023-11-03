@@ -6,7 +6,10 @@
                     <!-- Add new Task -->
                     <NewTask @added="handleAddedTask"/>
                     <!-- List of uncompleted tasks -->
-                    <Tasks :tasks="uncompletedTasks" @updated="handleUpdatedTask"/>
+                    <Tasks :tasks="uncompletedTasks" 
+                        @updated="handleUpdatedTask"
+                        @completed="handleCompletedTask"
+                    />
                     <!-- Show toggle button -->
                     <div class="text-center my-3" v-show="showToggleCompletedBtn">
                         <button class="btn btn-sm btn-secondary" @click="showCompletedTasks = !showCompletedTasks">
@@ -15,7 +18,11 @@
                         </button>
                     </div>
                     <!-- List of completed tasks -->
-                    <Tasks :tasks="completedTasks" :show="completedTasksIsVisible && showCompletedTasks"/>
+                    <Tasks :tasks="completedTasks" 
+                        :show="completedTasksIsVisible && showCompletedTasks"
+                        @updated="handleUpdatedTask"
+                        @completed="handleCompletedTask"
+                    />
                 </div>
             </div>
         </div>
@@ -24,7 +31,7 @@
 
 <script setup>
 import { compile, computed, onMounted, ref } from 'vue';
-import { allTasks, createTask, updateTask} from "../http/task-api";
+import { allTasks, createTask, updateTask, completeTask} from "../http/task-api";
 import Tasks from '../components/tasks/Tasks.vue';
 import NewTask from '../components/tasks/NewTask.vue';
 
@@ -65,5 +72,15 @@ const handleUpdatedTask = async(task)=>{
     const currentTask = tasks.value.find(item => item.id === task.id)
 
     currentTask.name = updatedTask.data.name
+}
+
+const handleCompletedTask = async(task)=>{
+    const {data: updatedTask} = await completeTask(task.id, {
+        is_completed: task.is_completed
+    })
+
+    const currentTask = tasks.value.find(item => item.id === task.id)
+
+    currentTask.is_completed = updatedTask.data.is_completed
 }
 </script>
