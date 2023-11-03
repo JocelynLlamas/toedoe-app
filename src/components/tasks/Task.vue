@@ -27,7 +27,10 @@
       <!-- <div class="task-date">24 Feb 12:00</div> -->
     </div>
     <!-- actions -->
-    <TaskActions @edit="$event=> isEdit=true" v-show="!isEdit"/>
+    <TaskActions 
+      @edit="$event=> isEdit=true" v-show="!isEdit"
+      @remove="removeTask"
+    />
   </li>
 </template>
 
@@ -39,7 +42,7 @@ const props = defineProps({
   task: Object,
 });
 
-const emit = defineEmits(['updated', 'completed'])
+const emit = defineEmits(['updated', 'completed', 'remove'])
 
 // Ref is like useState
 const isEdit = ref(false)
@@ -62,6 +65,12 @@ const markTaskAsCompeleted = event => {
 
   const updatedTask = {... props.task, is_completed: !props.task.is_completed}
   emit('completed', updatedTask)
+}
+
+const removeTask = () => {
+  if(confirm("Are you sure?")){
+    emit('removed', props.task)
+  }
 }
 
 const undo = () => {
