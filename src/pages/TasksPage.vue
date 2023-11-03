@@ -41,25 +41,18 @@ import { useTaskStore } from "../stores/task";
 
 const store = useTaskStore()
 const {completedTasks, uncompletedTasks} = storeToRefs(store)
-// store.task.name = "First task updated"
-// store.task.is_completed = true
-// store.$patch({
-//     task:{
-//         name: "First task updated using $patch",
-//         is_completed: true
-//     }
-// })
+const {fetchAllTasks} = store
 
 const tasks = ref([]);
 
 onMounted(async()=>{
 
-    const {data} = await allTasks();
     // console.log(data);
-
     // tasks.value = data.data.filter(task => !task.is_completed);
     // tasks.value = data.data.filter(task => task.is_completed);
-    tasks.value = data.data;
+    
+    // Actions
+    await fetchAllTasks()
 })
 
 const showToggleCompletedBtn = computed(
