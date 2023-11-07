@@ -8,12 +8,18 @@ const routes = [
     {
         path: "/tasks",
         component: TaskPage,
-        name: 'tasks'
+        name: 'tasks',
+        meta:{
+            auth: true
+        }
     },
     {
         path: "/summary",
         component: SummaryPage,
-        name: 'summary'
+        name: 'summary',
+        meta:{
+            auth: true
+        }
     },
     {
         path: "/login",
